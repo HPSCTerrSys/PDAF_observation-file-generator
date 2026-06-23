@@ -26,6 +26,7 @@ Usage:
 import argparse
 import sys
 import os
+import warnings
 from pathlib import Path
 
 import datetime
@@ -154,7 +155,10 @@ def _create_obs_file(
     v_no_obs[:] = 1
     v_dr[:] = dr
     v_obs_clm[0] = sm_value
-    v_type_clm[0] = np.frombuffer(obs_type.ljust(strlen).encode("ascii"), dtype="S1").reshape(1, strlen)
+    # netCDF4 ≤1.7.4 does `view.shape = ...` internally (deprecated in NumPy 2.5)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", DeprecationWarning)
+        v_type_clm[:] = np.array([list(obs_type.ljust(strlen))], dtype="S1")
 
     dst.close()
 

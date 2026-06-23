@@ -182,7 +182,7 @@ def main():
         help=(
             "Root COSMOS-Europe data directory (the folder that contains "
             "General_information.csv and processed_crns_data_and_diagnostics/). "
-            "Defaults to COSMOS_Europe_Data/ co-located with parse_crns_data.py."
+            "Defaults to COSMOS_Europe_Data_rev1/ co-located with parse_crns_data.py."
         ),
     )
     parser.add_argument(

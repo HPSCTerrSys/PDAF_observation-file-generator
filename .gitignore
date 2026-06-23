@@ -1,0 +1,7 @@
+# COSMOS-Europe dataset (downloaded via --download-data, not tracked in git)
+mkcrns/COSMOS_Europe_Data*/
+mkcrns/*.zip
+
+# Python local files
+**/__pycache__
+*.egg-info

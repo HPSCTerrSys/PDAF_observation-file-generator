@@ -12,8 +12,8 @@ Reference:
 
 Usage:
     from parse_crns_data import load_crns_data
-    df = load_crns_data("SEC001")                          # data co-located with this file
-    df = load_crns_data("SEC001", data_dir="/path/to/COSMOS_Europe_Data")  # explicit path
+    df = load_crns_data("SEC001")                                    # data co-located with this file
+    df = load_crns_data("SEC001", data_dir="/path/to/COSMOS_Europe_Data_rev1")  # explicit path
     print(df.attrs)  # Access metadata
 
 Note on metadata:
@@ -39,7 +39,7 @@ from typing import Optional
 # Assumes the COSMOS_Europe_Data folder is co-located with this module,
 # which holds for local / side-by-side use. Pass data_dir explicitly when
 # the module is installed as a package and the data lives elsewhere.
-_DEFAULT_DATA_DIR = Path(__file__).parent / "COSMOS_Europe_Data"
+_DEFAULT_DATA_DIR = Path(__file__).parent / "COSMOS_Europe_Data_rev1"
 
 
 def _resolve_data_dir(data_dir: Optional[Path]) -> Path:
@@ -47,26 +47,37 @@ def _resolve_data_dir(data_dir: Optional[Path]) -> Path:
     return Path(data_dir) if data_dir is not None else _DEFAULT_DATA_DIR
 
 
-def load_general_info(data_dir: Optional[Path] = None) -> pd.DataFrame:
+def load_general_info(
+    data_dir: Optional[Path] = None,
+    filename: str = "General_ information_rev1.csv",
+) -> pd.DataFrame:
     """Load general station information/metadata."""
-    # Note: the space in "General_ information.csv" is present in the original dataset.
-    filepath = _resolve_data_dir(data_dir) / "General_ information.csv"
+    # Note: the space in "General_ information*.csv" is present in the original dataset.
+    filepath = _resolve_data_dir(data_dir) / filename
     df = pd.read_csv(filepath, encoding="latin-1")
     df = df.rename(columns=lambda x: x.strip())
     df = df.set_index("File name")
     return df
 
 
-def load_additional_info(data_dir: Optional[Path] = None) -> pd.DataFrame:
+def load_additional_info(
+    data_dir: Optional[Path] = None,
+    filename: str = "Additional_information_rev1.csv",
+) -> pd.DataFrame:
     """Load additional station information (physical quantities)."""
-    filepath = _resolve_data_dir(data_dir) / "Additional_information.csv"
+    filepath = _resolve_data_dir(data_dir) / filename
     df = pd.read_csv(filepath, encoding="latin-1")
     df = df.rename(columns=lambda x: x.strip())
     df = df.set_index("Station ID")
     return df
 
 
-def get_station_metadata(station_id: str, data_dir: Optional[Path] = None) -> dict:
+def get_station_metadata(
+    station_id: str,
+    data_dir: Optional[Path] = None,
+    general_info_filename: str = "General_ information_rev1.csv",
+    additional_info_filename: str = "Additional_information_rev1.csv",
+) -> dict:
     """
     Get combined metadata for a station from both info files.
 
@@ -77,14 +88,18 @@ def get_station_metadata(station_id: str, data_dir: Optional[Path] = None) -> di
     data_dir : Path, optional
         Root COSMOS-Europe data directory. Defaults to the directory co-located
         with this module.
+    general_info_filename : str, optional
+        Filename of the general information CSV inside data_dir.
+    additional_info_filename : str, optional
+        Filename of the additional information CSV inside data_dir.
 
     Returns
     -------
     dict
-        Combined metadata from General_information.csv and Additional_information.csv
+        Combined metadata from the two info CSV files.
     """
-    general_info = load_general_info(data_dir)
-    additional_info = load_additional_info(data_dir)
+    general_info = load_general_info(data_dir, filename=general_info_filename)
+    additional_info = load_additional_info(data_dir, filename=additional_info_filename)
 
     metadata = {}
 
@@ -136,6 +151,9 @@ def load_crns_data(
     station_id: str = "SEC001",
     data_dir: Optional[Path] = None,
     include_metadata: bool = True,
+    processed_dir_name: str = "processed_crns_data_and_diagnostics_rev1",
+    general_info_filename: str = "General_ information_rev1.csv",
+    additional_info_filename: str = "Additional_information_rev1.csv",
 ) -> pd.DataFrame:
     """
     Load processed CRNS soil moisture data for a given station.
@@ -146,15 +164,21 @@ def load_crns_data(
         Station identifier (default: "SEC001" for Selhausen)
     data_dir : Path, optional
         Root COSMOS-Europe data directory (i.e. the folder that contains
-        General_information.csv and the processed_crns_data_and_diagnostics/
-        subdirectory). Defaults to the COSMOS_Europe_Data directory co-located
-        with this module. Pass an explicit path when the module is installed as
+        the general info CSV files and the processed data subdirectory).
+        Defaults to the COSMOS_Europe_Data_rev1 directory co-located with
+        this module. Pass an explicit path when the module is installed as
         a package and the data lives elsewhere.
     include_metadata : bool, optional
         Whether to include station metadata as DataFrame attributes (default: True).
         Note: pandas .attrs are not preserved through most DataFrame operations
         (filtering, resampling, etc.). Extract metadata before transforming the
         DataFrame if you need to keep it.
+    processed_dir_name : str, optional
+        Name of the subdirectory inside data_dir that contains per-station CSVs.
+    general_info_filename : str, optional
+        Filename of the general information CSV inside data_dir.
+    additional_info_filename : str, optional
+        Filename of the additional information CSV inside data_dir.
 
     Returns
     -------
@@ -208,7 +232,7 @@ def load_crns_data(
     >>> df['SoilMoisture_volumetric_MovAvg24h'].plot()
     """
     root_dir = _resolve_data_dir(data_dir)
-    processed_dir = root_dir / "processed_crns_data_and_diagnostics"
+    processed_dir = root_dir / processed_dir_name
     filepath = processed_dir / f"{station_id}.csv"
 
     if not filepath.exists():
@@ -223,12 +247,20 @@ def load_crns_data(
 
     # Add metadata as attributes
     if include_metadata:
-        df.attrs = get_station_metadata(station_id, data_dir)
+        df.attrs = get_station_metadata(
+            station_id,
+            data_dir,
+            general_info_filename=general_info_filename,
+            additional_info_filename=additional_info_filename,
+        )
 
     return df
 
 
-def list_available_stations(data_dir: Optional[Path] = None) -> pd.DataFrame:
+def list_available_stations(
+    data_dir: Optional[Path] = None,
+    general_info_filename: str = "General_ information_rev1.csv",
+) -> pd.DataFrame:
     """
     List all available stations with their basic information.
 
@@ -236,14 +268,16 @@ def list_available_stations(data_dir: Optional[Path] = None) -> pd.DataFrame:
     ----------
     data_dir : Path, optional
         Root COSMOS-Europe data directory. Defaults to the directory
-        `COSMOS_Europe_Data` co-located with this module.
+        `COSMOS_Europe_Data_rev1` co-located with this module.
+    general_info_filename : str, optional
+        Filename of the general information CSV inside data_dir.
 
     Returns
     -------
     pd.DataFrame
         DataFrame with station IDs as index and basic info columns
     """
-    general_info = load_general_info(data_dir)
+    general_info = load_general_info(data_dir, filename=general_info_filename)
     return general_info[["Station", "Country", "Main land use", "Time period start", "Time period end"]]
 
 

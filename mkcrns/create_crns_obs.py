@@ -15,10 +15,12 @@ observation file. Use --skip-flagged to additionally treat
 quality-flagged hours as missing before computing the daily mean.
 
 Usage:
-    python mkcrns/create_crns_obs.py SEC001 2018 --crns-data-dir /path/to/COSMOS_Europe_Data
+    python mkcrns/create_crns_obs.py --download-data
+    python mkcrns/create_crns_obs.py --download-data --crns-data-dir /path/to/dir
+    python mkcrns/create_crns_obs.py SEC001 2018 --crns-data-dir /path/to/COSMOS_Europe_Data_rev1
     python mkcrns/create_crns_obs.py SEC001 2018 --output-dir /path/to/output
     python mkcrns/create_crns_obs.py SEC001 2018 --dr 0.004 0.003 --layer 1 --obs-type SM --skip-flagged
-    python mkcrns/create_crns_obs.py --list-stations --crns-data-dir /path/to/COSMOS_Europe_Data
+    python mkcrns/create_crns_obs.py --list-stations --crns-data-dir /path/to/COSMOS_Europe_Data_rev1
 """
 
 import argparse
@@ -39,6 +41,7 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 from parse_crns_data import load_crns_data, list_available_stations
+from download_cosmos_europe import download_cosmos_europe
 import utils.nc_attributes as pdaf_obs_utils
 
 # Fixed reference epoch for the time variable, matching CF conventions.
@@ -239,8 +242,22 @@ def main():
         action="store_true",
         help="Print available CRNS stations and exit",
     )
+    parser.add_argument(
+        "--download-data",
+        action="store_true",
+        help=(
+            "Download the COSMOS-Europe dataset (revision 1) from "
+            "Forschungszentrum Jülich and exit. The dataset is extracted into "
+            "--crns-data-dir if given, otherwise next to parse_crns_data.py."
+        ),
+    )
 
     args = parser.parse_args()
+
+    if args.download_data:
+        dest_dir = args.crns_data_dir.parent if args.crns_data_dir is not None else None
+        download_cosmos_europe(dest_dir=dest_dir)
+        sys.exit(0)
 
     if args.list_stations:
         print("Available CRNS stations:")

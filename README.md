@@ -37,17 +37,3 @@ pip install -e .
 
 - **[`mkcrns/`](mkcrns/README.md)** — CRNS soil moisture observations from COSMOS-Europe
 - **[`utils/`](utils/README.md)** — Shared utilities (NetCDF provenance attributes)
-
----
-
-## Data Citation
-
-When using COSMOS-Europe data, please cite:
-
-> Bogena, H. R., Schrön, M., Jakobi, J., Ney, P., Zacharias, S., Andreasen, M.,
-> et al.: COSMOS-Europe: a European network of cosmic-ray neutron soil moisture
-> sensors, Earth Syst. Sci. Data, 14, 1125–1151,
-> https://doi.org/10.5194/essd-14-1125-2022, 2022.
-
-**Data DOI:** https://doi.org/10.34731/x9s3-kr48
-**Contact:** h.bogena@fz-juelich.de

@@ -113,7 +113,8 @@ def _create_obs_file(
     dst.createDimension("time", 1)
     dst.createDimension("dim_obs", 1)
     dst.createDimension("dim_dr", 2)
-    dst.createDimension("strlen", 20)
+    strlen = 20
+    dst.createDimension("strlen", strlen)
 
     v_time = dst.createVariable("time", np.float64, ("time",))
     v_time.long_name = "time"
@@ -153,7 +154,7 @@ def _create_obs_file(
     v_no_obs[:] = 1
     v_dr[:] = dr
     v_obs_clm[0] = sm_value
-    v_type_clm[0] = np.frombuffer(obs_type.ljust(20).encode("ascii"), dtype="S1")
+    v_type_clm[0] = np.frombuffer(obs_type.ljust(strlen).encode("ascii"), dtype="S1").reshape(1, strlen)
 
     dst.close()
 

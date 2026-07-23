@@ -15,9 +15,10 @@ TSMP-PDAF.
 ```
 PDAF_observation-file-generator/
 ├── mkcrns/                      # Observation files from COSMOS-Europe CRNS data
-│   ├── download_cosmos_europe.py # Download COSMOS-Europe CRNS dataset from TERENO
 │   ├── create_crns_obs.py       # Main script: CRNS data → TSMP-PDAF NetCDF files
-│   └── parse_crns_data.py       # Parser: COSMOS-Europe CSV → pandas DataFramex
+│   └── cosmos_europe/           # COSMOS-Europe dataset download and parsing
+│       ├── download_cosmos_europe.py # Download CRNS dataset from TERENO
+│       └── parse_crns_data.py   # Parser: COSMOS-Europe CSV → pandas DataFrame
 ├── mkoldummy/                   # Dummy observation files for open-loop / spin-up runs
 │   └── create_dummy_obs.py      # Single placeholder obs file (no_obs=1) for OL runs
 └── utils/                       # Shared utilities

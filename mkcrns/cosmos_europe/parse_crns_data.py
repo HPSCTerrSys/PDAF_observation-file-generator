@@ -39,7 +39,7 @@ from typing import Optional
 # Assumes the COSMOS_Europe_Data folder is co-located with this module,
 # which holds for local / side-by-side use. Pass data_dir explicitly when
 # the module is installed as a package and the data lives elsewhere.
-_DEFAULT_DATA_DIR = Path(__file__).parent / "COSMOS_Europe_Data_rev1"
+_DEFAULT_DATA_DIR = Path(__file__).parent.parent / "COSMOS_Europe_Data_rev1"
 
 
 def _resolve_data_dir(data_dir: Optional[Path]) -> Path:

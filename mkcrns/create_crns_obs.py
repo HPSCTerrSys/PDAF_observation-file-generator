@@ -35,11 +35,13 @@ import numpy as np
 import netCDF4 as nc
 import pandas as pd
 
-# Make the shared utils package importable from the repository root,
+# Make the shared utils package and the cosmos_europe subpackage importable
 # regardless of the working directory from which this script is called.
 _REPO_ROOT = Path(__file__).resolve().parent.parent
-if str(_REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(_REPO_ROOT))
+_COSMOS_EUROPE = Path(__file__).resolve().parent / "cosmos_europe"
+for _p in [str(_REPO_ROOT), str(_COSMOS_EUROPE)]:
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
 
 from parse_crns_data import load_crns_data, list_available_stations
 from download_cosmos_europe import download_cosmos_europe
@@ -187,7 +189,7 @@ def main():
         help=(
             "Root COSMOS-Europe data directory (the folder that contains "
             "General_information.csv and processed_crns_data_and_diagnostics/). "
-            "Defaults to COSMOS_Europe_Data_rev1/ co-located with parse_crns_data.py."
+            "Defaults to COSMOS_Europe_Data_rev1/ inside mkcrns/."
         ),
     )
     parser.add_argument(

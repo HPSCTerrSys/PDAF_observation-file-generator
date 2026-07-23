@@ -26,7 +26,7 @@ downloaded automatically:
 python mkcrns/create_crns_obs.py --download-data
 ```
 
-This downloads and extracts the dataset next to `parse_crns_data.py` as
+This downloads and extracts the dataset into `mkcrns/` as
 `COSMOS_Europe_Data_rev1/`. To place it elsewhere, combine with `--crns-data-dir`:
 
 ```bash
@@ -45,8 +45,7 @@ COSMOS_Europe_Data_rev1/
     └── ...
 ```
 
-Pass the root folder via `--crns-data-dir` when it is not co-located with
-`parse_crns_data.py`.
+Pass the root folder via `--crns-data-dir` when it is not inside `mkcrns/`.
 
 ## Quick Start
 
@@ -79,7 +78,7 @@ next assimilation step.
 |-------------------|-------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
 | `station_id`      | *(required)*                              | CRNS station ID, e.g. `SEC001`                                                                                                              |
 | `year`            | *(required)*                              | Year to process                                                                                                                             |
-| `--crns-data-dir` | `COSMOS_Europe_Data_rev1/` next to parser | Root COSMOS-Europe data directory                                                                                                           |
+| `--crns-data-dir` | `mkcrns/COSMOS_Europe_Data_rev1/`          | Root COSMOS-Europe data directory                                                                                                           |
 | `--output-dir`    | `.`                                       | Output root; files go to `OUTPUT_DIR/YEAR/`                                                                                                 |
 | `--prefix`        | `CRNS_SM_CLM`                             | Output filename prefix                                                                                                                      |
 | `--obs-var`       | `SoilMoisture_volumetric_MovAvg24h`       | CRNS column to use as observation value                                                                                                     |
@@ -91,30 +90,7 @@ next assimilation step.
 | `--list-stations` | off                                       | Print available stations and exit                                                                                                           |
 | `--download-data` | off                                       | Download the COSMOS-Europe dataset (revision 1) and exit                                                                                    |
 
-## `parse_crns_data.py`: Python API
+## Python API (`cosmos_europe/`)
 
-`parse_crns_data` can also be used directly in Python scripts or notebooks:
-
-```python
-from mkcrns.parse_crns_data import load_crns_data, list_available_stations
-
-# List all available stations
-print(list_available_stations(data_dir="/path/to/COSMOS_Europe_Data_rev1"))
-
-# Load hourly data for a station
-df = load_crns_data("SEC001", data_dir="/path/to/COSMOS_Europe_Data_rev1")
-
-# Station metadata is attached as DataFrame attributes
-print(df.attrs["station_name"])          # 'Selhausen'
-print(df.attrs["latitude"])              # 50.866...
-print(df.attrs["mean_footprint_depth_m"])
-
-# Key data columns
-sm   = df["SoilMoisture_volumetric_MovAvg24h"]     # [m³/m³], 24h moving average
-std  = df["SoilMoisture_volumetric_MovAvg24h_std"] # uncertainty
-snow = df["Flag_Snow_ERA5"]                         # 0 = ok, 1 = snow-affected
-```
-
-> **Note:** pandas `.attrs` are silently dropped by most DataFrame operations
-> (filtering, resampling, etc.). Extract metadata *before* transforming the
-> DataFrame — see the module docstring in `parse_crns_data.py` for details.
+`download_cosmos_europe` and `parse_crns_data` can be imported directly —
+see [`cosmos_europe/README.md`](cosmos_europe/README.md) for usage examples.

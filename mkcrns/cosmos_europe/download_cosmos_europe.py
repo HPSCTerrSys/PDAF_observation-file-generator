@@ -34,7 +34,7 @@ _DOWNLOAD_URL = (
 # Top-level directory name inside the zip archive and on disk after extraction.
 DATASET_DIRNAME = "COSMOS_Europe_Data_rev1"
 
-_DEFAULT_DEST_DIR = Path(__file__).parent
+_DEFAULT_DEST_DIR = Path(__file__).parent.parent
 
 
 def download_cosmos_europe(dest_dir: Optional[Path] = None) -> Path:

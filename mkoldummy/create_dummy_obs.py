@@ -181,8 +181,8 @@ def main():
         type=float,
         nargs=2,
         default=[0.00387525, 0.002500534],
-        metavar=("DR_H", "DR_V"),
-        help="Localization radii [horizontal, vertical]",
+        metavar=("DR_LON", "DR_LAT"),
+        help="Snapping distances [longitude, latitude]",
     )
     parser.add_argument(
         "--sm-value",

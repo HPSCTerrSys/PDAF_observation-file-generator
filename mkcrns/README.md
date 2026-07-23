@@ -60,7 +60,7 @@ python mkcrns/create_crns_obs.py --list-stations
 python mkcrns/create_crns_obs.py SEC001 2018 \
     --output-dir /path/to/output
 
-# With quality-flag masking and custom snapping radii `dr`
+# With quality-flag masking and custom snapping distances `dr`
 python mkcrns/create_crns_obs.py SEC001 2018 \
     --output-dir /path/to/output \
     --skip-flagged \
@@ -74,21 +74,21 @@ next assimilation step.
 
 ## `create_crns_obs.py`: Full Option Reference
 
-| Argument          | Default                                   | Description                                                                                                                                 |
-|-------------------|-------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| `station_id`      | *(required)*                              | CRNS station ID, e.g. `SEC001`                                                                                                              |
-| `year`            | *(required)*                              | Year to process                                                                                                                             |
-| `--crns-data-dir` | `mkcrns/COSMOS_Europe_Data_rev1/`          | Root COSMOS-Europe data directory                                                                                                           |
-| `--output-dir`    | `.`                                       | Output root; files go to `OUTPUT_DIR/YEAR/`                                                                                                 |
-| `--prefix`        | `CRNS_SM_CLM`                             | Output filename prefix                                                                                                                      |
-| `--obs-var`       | `SoilMoisture_volumetric_MovAvg24h`       | CRNS column to use as observation value                                                                                                     |
-| `--layer`         | `1`                                       | CLM5 soil layer index (0-based)                                                                                                             |
-| `--type-clm`      | `SM`                                      | Observation type string written to `type_clm`; must match `current_observation_type` in TSMP-PDAF to avoid silent skipping in joint DA runs |
-| `--dr DR_H DR_V`  | `0.00387525 0.002500534`                  | Localization radii [horizontal, vertical]                                                                                                   |
-| `--setup`         | `undefined`                               | Setup name stored in NetCDF global attributes                                                                                               |
-| `--skip-flagged`  | off                                       | Mask quality-flagged hourly records as NaN before computing daily means                                                                     |
-| `--list-stations` | off                                       | Print available stations and exit                                                                                                           |
-| `--download-data` | off                                       | Download the COSMOS-Europe dataset (revision 1) and exit                                                                                    |
+| Argument             | Default                             | Description                                                                                                                                 |
+|----------------------|-------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| `station_id`         | *(required)*                        | CRNS station ID, e.g. `SEC001`                                                                                                              |
+| `year`               | *(required)*                        | Year to process                                                                                                                             |
+| `--crns-data-dir`    | `mkcrns/COSMOS_Europe_Data_rev1/`   | Root COSMOS-Europe data directory                                                                                                           |
+| `--output-dir`       | `.`                                 | Output root; files go to `OUTPUT_DIR/YEAR/`                                                                                                 |
+| `--prefix`           | `CRNS_SM_CLM`                       | Output filename prefix                                                                                                                      |
+| `--obs-var`          | `SoilMoisture_volumetric_MovAvg24h` | CRNS column to use as observation value                                                                                                     |
+| `--layer`            | `1`                                 | CLM5 soil layer index (0-based)                                                                                                             |
+| `--type-clm`         | `SM`                                | Observation type string written to `type_clm`; must match `current_observation_type` in TSMP-PDAF to avoid silent skipping in joint DA runs |
+| `--dr DR_LON DR_LAT` | `0.00387525 0.002500534`            | Snapping distances [longitude, latitude]                                                                                                   |
+| `--setup`            | `undefined`                         | Setup name stored in NetCDF global attributes                                                                                               |
+| `--skip-flagged`     | off                                 | Mask quality-flagged hourly records as NaN before computing daily means                                                                     |
+| `--list-stations`    | off                                 | Print available stations and exit                                                                                                           |
+| `--download-data`    | off                                 | Download the COSMOS-Europe dataset (revision 1) and exit                                                                                    |
 
 ## Python API (`cosmos_europe/`)
 

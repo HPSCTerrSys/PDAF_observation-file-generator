@@ -60,7 +60,7 @@ python mkcrns/create_crns_obs.py --list-stations
 python mkcrns/create_crns_obs.py SEC001 2018 \
     --output-dir /path/to/output
 
-# With quality-flag masking and custom localization radii
+# With quality-flag masking and custom snapping radii `dr`
 python mkcrns/create_crns_obs.py SEC001 2018 \
     --output-dir /path/to/output \
     --skip-flagged \
@@ -83,7 +83,7 @@ next assimilation step.
 | `--prefix`        | `CRNS_SM_CLM`                             | Output filename prefix                                                                                                                      |
 | `--obs-var`       | `SoilMoisture_volumetric_MovAvg24h`       | CRNS column to use as observation value                                                                                                     |
 | `--layer`         | `1`                                       | CLM5 soil layer index (0-based)                                                                                                             |
-| `--obs-type`      | `SM`                                      | Observation type string written to `type_clm`; must match `current_observation_type` in TSMP-PDAF to avoid silent skipping in joint DA runs |
+| `--type-clm`      | `SM`                                      | Observation type string written to `type_clm`; must match `current_observation_type` in TSMP-PDAF to avoid silent skipping in joint DA runs |
 | `--dr DR_H DR_V`  | `0.00387525 0.002500534`                  | Localization radii [horizontal, vertical]                                                                                                   |
 | `--setup`         | `undefined`                               | Setup name stored in NetCDF global attributes                                                                                               |
 | `--skip-flagged`  | off                                       | Mask quality-flagged hourly records as NaN before computing daily means                                                                     |

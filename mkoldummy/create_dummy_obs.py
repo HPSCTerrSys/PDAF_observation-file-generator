@@ -65,7 +65,7 @@ def create_dummy_obs_file(
     sm_value: float,
     layer: int,
     dr: list,
-    obs_type: str,
+    type_clm: str,
     setup: str,
     script_name: str,
 ):
@@ -127,7 +127,7 @@ def create_dummy_obs_file(
     # netCDF4 ≤1.7.4 does `view.shape = ...` internally (deprecated in NumPy 2.5)
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", DeprecationWarning)
-        v_type_clm[:] = np.array([list(obs_type.ljust(strlen))], dtype="S1")
+        v_type_clm[:] = np.array([list(type_clm.ljust(strlen))], dtype="S1")
 
     dst.close()
 
@@ -171,7 +171,7 @@ def main():
         help="CLM5 soil layer index (0-based) written to the observation file",
     )
     parser.add_argument(
-        "--obs-type",
+        "--type-clm",
         default="SM",
         metavar="TYPE",
         help="Observation type string written to type_clm.",
@@ -215,7 +215,7 @@ def main():
         sm_value=args.sm_value,
         layer=args.layer,
         dr=args.dr,
-        obs_type=args.obs_type,
+        type_clm=args.type_clm,
         setup=args.setup,
         script_name=script_name,
     )

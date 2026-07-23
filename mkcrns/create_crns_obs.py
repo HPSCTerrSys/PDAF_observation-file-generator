@@ -19,7 +19,7 @@ Usage:
     python mkcrns/create_crns_obs.py --download-data --crns-data-dir /path/to/dir
     python mkcrns/create_crns_obs.py SEC001 2018 --crns-data-dir /path/to/COSMOS_Europe_Data_rev1
     python mkcrns/create_crns_obs.py SEC001 2018 --output-dir /path/to/output
-    python mkcrns/create_crns_obs.py SEC001 2018 --dr 0.004 0.003 --layer 1 --obs-type SM --skip-flagged
+    python mkcrns/create_crns_obs.py SEC001 2018 --dr 0.004 0.003 --layer 1 --type-clm SM --skip-flagged
     python mkcrns/create_crns_obs.py --list-stations --crns-data-dir /path/to/COSMOS_Europe_Data_rev1
 """
 
@@ -103,7 +103,7 @@ def _create_obs_file(
     sm_value: float,
     layer: int,
     dr: list,
-    obs_type: str,
+    type_clm: str,
     setup: str,
     script_name: str,
 ):
@@ -160,7 +160,7 @@ def _create_obs_file(
     # netCDF4 ≤1.7.4 does `view.shape = ...` internally (deprecated in NumPy 2.5)
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", DeprecationWarning)
-        v_type_clm[:] = np.array([list(obs_type.ljust(strlen))], dtype="S1")
+        v_type_clm[:] = np.array([list(type_clm.ljust(strlen))], dtype="S1")
 
     dst.close()
 
@@ -217,7 +217,7 @@ def main():
         help="CLM5 soil layer index (0-based) written to the observation file",
     )
     parser.add_argument(
-        "--obs-type",
+        "--type-clm",
         default="SM",
         metavar="TYPE",
         help=(
@@ -325,7 +325,7 @@ def main():
                 float(sm_val),
                 args.layer,
                 args.dr,
-                args.obs_type,
+                args.type_clm,
                 args.setup,
                 script_name,
             )

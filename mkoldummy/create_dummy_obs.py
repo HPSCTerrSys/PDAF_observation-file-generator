@@ -144,12 +144,13 @@ def main():
         "--output-dir",
         type=Path,
         default=Path("."),
-        metavar="DIR",
+        metavar="OUTPUT_DIR",
         help="Directory in which to write the dummy observation file.",
     )
     parser.add_argument(
         "--prefix",
         default="DUMMY_OL_CLM",
+        metavar="PREFIX",
         help="Output filename prefix (file is always written as PREFIX.00001).",
     )
     parser.add_argument(
@@ -188,7 +189,7 @@ def main():
         "--sm-value",
         type=float,
         default=_DEFAULT_SM,
-        metavar="SM",
+        metavar="SM_VALUE",
         help="Placeholder soil moisture value [m³/m³] written to obs_clm.",
     )
     parser.add_argument(

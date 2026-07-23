@@ -179,29 +179,31 @@ def main():
         "year",
         nargs="?",
         type=int,
+        metavar="YEAR",
         help="Year to process",
     )
     parser.add_argument(
         "--crns-data-dir",
         type=Path,
         default=None,
-        metavar="DIR",
+        metavar="CRNS_DATA_DIR",
         help=(
             "Root COSMOS-Europe data directory (the folder that contains "
             "General_information.csv and processed_crns_data_and_diagnostics/). "
-            "Defaults to COSMOS_Europe_Data_rev1/ inside mkcrns/."
+            "Defaults to CRNS_DATA_DIR=COSMOS_Europe_Data_rev1/ inside mkcrns/."
         ),
     )
     parser.add_argument(
         "--output-dir",
         type=Path,
         default=Path("."),
-        metavar="DIR",
+        metavar="OUTPUT_DIR",
         help="Root output directory; files are written to OUTPUT_DIR/YEAR/",
     )
     parser.add_argument(
         "--prefix",
         default="CRNS_SM_CLM",
+        metavar="PREFIX",
         help="Output filename prefix",
     )
     parser.add_argument(
@@ -255,7 +257,7 @@ def main():
         help=(
             "Download the COSMOS-Europe dataset (revision 1) from "
             "Forschungszentrum Jülich and exit. The dataset is extracted into "
-            "--crns-data-dir if given, otherwise next to parse_crns_data.py."
+            "--crns-data-dir if given, otherwise inside mkcrns/."
         ),
     )
 

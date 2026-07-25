@@ -150,7 +150,8 @@ def _create_obs_file(
 
     v_lat[0] = lat
     v_lon[0] = lon
-    v_layer[0] = 0  # no soil layer concept for LAI; 0 written for format compatibility
+    v_layer[0] = 1  # no soil layer concept for LAI; 1 written for
+                    # compatibility with init_dim_obs
     v_dim_dr[:] = np.arange(1, 3)
     v_dim_obs[:] = [1]
     v_no_obs[:] = 1

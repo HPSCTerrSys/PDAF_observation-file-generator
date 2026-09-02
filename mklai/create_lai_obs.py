@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Create TSMP-PDAF observation files from Sentinel-2 LAI time series data.
+Create TSMP-PDAF observation files from LAI time series data.
 
 Reads LAI values from a two-column CSV file (ts_date, ts_lai) for a single
 site and writes one NetCDF observation file per day in the format used by
@@ -67,7 +67,7 @@ def _load_lai_csv(csv_path: Path) -> pd.Series:
 
 
 def _create_empty_obs_file(
-    dst_path: str, date: datetime.date, setup: str, script_name: str
+    dst_path: str, date: datetime.date, setup: str, script_name: str, dataset: str
 ):
     """Write an empty PDAF observation file (no_obs=0) for days without valid data.
 
@@ -79,6 +79,7 @@ def _create_empty_obs_file(
     dst = nc.Dataset(dst_path, "w")
 
     pdaf_obs_utils.set_netcdf_attributes(dst, script_name, setup)
+    dst.setncattr("obs_source", dataset)
 
     dst.createDimension("time", 1)
     dst.createDimension("dim_obs", 1)
@@ -105,12 +106,14 @@ def _create_obs_file(
     type_clm: str,
     setup: str,
     script_name: str,
+    dataset: str,
 ):
     """Write a single-observation PDAF NetCDF file for one LAI value."""
     os.makedirs(os.path.dirname(dst_path), exist_ok=True)
     dst = nc.Dataset(dst_path, "w")
 
     pdaf_obs_utils.set_netcdf_attributes(dst, script_name, setup)
+    dst.setncattr("obs_source", dataset)
 
     dst.createDimension("time", 1)
     dst.createDimension("dim_obs", 1)
@@ -167,7 +170,7 @@ def _create_obs_file(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Create TSMP-PDAF observation files from Sentinel-2 LAI time series",
+        description="Create TSMP-PDAF observation files from LAI time series data",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
@@ -233,6 +236,15 @@ def main():
         default="undefined",
         help="Setup name stored in NetCDF global attributes",
     )
+    parser.add_argument(
+        "--dataset",
+        default="Sentinel-2",
+        metavar="DATASET",
+        help=(
+            "Dataset / sensor name stored as obs_source in NetCDF global attributes "
+            "(e.g. 'Sentinel-2', 'ICOS')"
+        ),
+    )
 
     args = parser.parse_args()
 
@@ -270,7 +282,7 @@ def main():
         lai_val = lai_by_date.get(date, np.nan)
 
         if np.isnan(lai_val):
-            _create_empty_obs_file(dst_path, date, args.setup, script_name)
+            _create_empty_obs_file(dst_path, date, args.setup, script_name, args.dataset)
             n_empty += 1
         else:
             _create_obs_file(
@@ -283,6 +295,7 @@ def main():
                 args.type_clm,
                 args.setup,
                 script_name,
+                args.dataset,
             )
             n_written += 1
 

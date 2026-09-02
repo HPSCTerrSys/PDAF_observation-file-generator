@@ -1,7 +1,8 @@
 # LAI Observations (`mklai/`)
 
-Creates TSMP-PDAF observation files from Sentinel-2 Leaf Area Index (LAI)
-time series data for a single field site.
+Creates TSMP-PDAF observation files from LAI time series data for a single
+field site. Supported data sources include Sentinel-2 (default) and ICOS
+(see `mklai_icos/` for the ICOS data preparation workflow).
 
 ## Data
 
@@ -34,6 +35,12 @@ python mklai/create_lai_obs.py 2020 \
     --lai-csv /path/to/my_lai.csv \
     --lat 50.123 --lon 6.456 \
     --output-dir /path/to/output
+
+# Use ICOS LAI data (prepared with mklai_icos/save_lai_csv.py)
+python mklai/create_lai_obs.py 2019 \
+    --lai-csv mklai_icos/icos_mean_lai.csv \
+    --dataset ICOS \
+    --output-dir /path/to/output
 ```
 
 Output files are written to `OUTPUT_DIR/YEAR/PREFIX.DDDDD` (zero-padded
@@ -54,6 +61,7 @@ the next assimilation step.
 | `--type-clm`         | `LAI`                              | Observation type string written to `type_clm`; must match `current_observation_type` in TSMP-PDAF to avoid silent skipping in joint DA runs  |
 | `--dr DR_LON DR_LAT` | `0.00387525 0.002500534`           | Snapping distances [longitude, latitude]                                                                                                     |
 | `--setup`            | `undefined`                        | Setup name stored in NetCDF global attributes                                                                                                |
+| `--dataset`          | `Sentinel-2`                       | Dataset / sensor name stored as `obs_source` in NetCDF global attributes (e.g. `Sentinel-2`, `ICOS`)                                        |
 
 ## Output File Format
 

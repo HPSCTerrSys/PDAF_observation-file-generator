@@ -303,6 +303,15 @@ def main():
         print(f"No data found for year {args.year}. Check the station's time period.")
         sys.exit(1)
 
+    # Reindex to the full calendar year so output files always start at DOY 1.
+    # Days before/after the station's data range become NaN and produce empty files.
+    full_year = pd.date_range(
+        start=datetime.date(args.year, 1, 1),
+        end=datetime.date(args.year, 12, 31),
+        freq="D",
+    )
+    daily_sm = daily_sm.reindex(full_year)
+
     print(f"\nProcessing year {args.year} ({len(daily_sm)} calendar days)")
 
     script_name = Path(__file__).name

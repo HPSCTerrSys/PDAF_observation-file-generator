@@ -19,6 +19,9 @@ PDAF_observation-file-generator/
 │   └── cosmos_europe/           # COSMOS-Europe dataset download and parsing
 │       ├── download_cosmos_europe.py # Download CRNS dataset from TERENO
 │       └── parse_crns_data.py   # Parser: COSMOS-Europe CSV → pandas DataFrame
+├── mklai/                       # Observation files from Sentinel-2 LAI time series
+│   ├── create_lai_obs.py        # Main script: LAI CSV → TSMP-PDAF NetCDF files
+│   └── S2_LAI_timeseries_CPP_10.csv  # Selhausen LAI data (2018–2022)
 ├── mkoldummy/                   # Dummy observation files for open-loop / spin-up runs
 │   └── create_dummy_obs.py      # Single placeholder obs file (no_obs=1) for OL runs
 └── utils/                       # Shared utilities
@@ -40,5 +43,6 @@ pip install -e .
 ## Tools
 
 - **[`mkcrns/`](mkcrns/README.md)** — CRNS soil moisture observations from COSMOS-Europe
+- **[`mklai/`](mklai/README.md)** — Sentinel-2 LAI observations for Selhausen (DE-RuS)
 - **[`mkoldummy/`](mkoldummy/)** — Dummy observation files for open-loop simulations
 - **[`utils/`](utils/README.md)** — Shared utilities (NetCDF provenance attributes)
